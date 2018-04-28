@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process-definition  xmlns=""  name="act_pac">
+   <swimlane name="swimlane1"></swimlane>
+
+
+	<start-state name="人力专员申请">
+		<transition to="部门领导审批" name="提交部门领导审批"></transition>
+	</start-state>
+
+
+	<task-node name="部门领导审批">
+		<task name="部门领导审批">
+			<assignment class="org.springmodules.workflow.jbpm31.JbpmHandlerProxy">
+				<targetBean>actCommAssignmentHandler</targetBean>
+				<factoryKey>jbpmConfiguration</factoryKey>
+			</assignment>
+		</task>
+		<transition to="管理员确认信息" name="管理员确认信息"></transition>
+		<transition to="驳回重提" name="驳回"></transition>
+	</task-node>
+	
+	<task-node name="管理员确认信息">
+		<task name="管理员确认信息">
+			<assignment class="org.springmodules.workflow.jbpm31.JbpmHandlerProxy">
+				<targetBean>actCommAssignmentHandler</targetBean>
+				<factoryKey>jbpmConfiguration</factoryKey>
+			</assignment>
+		</task>	
+		<transition to="信息服务中心领导审批" name="信息服务中心领导审批"></transition>
+		<transition to="驳回重提" name="驳回"></transition>
+	</task-node>
+
+	<task-node name="信息服务中心领导审批">
+		<task name="信息服务中心领导审批">
+			<assignment class="org.springmodules.workflow.jbpm31.JbpmHandlerProxy">
+				<targetBean>actCommAssignmentHandler</targetBean>
+				<factoryKey>jbpmConfiguration</factoryKey>
+			</assignment>
+		</task>	
+		<transition to="信息服务中心账号管理员" name="信息服务中心账号管理员"></transition>
+		<transition to="驳回重提" name="驳回"></transition>
+	</task-node>
+
+
+	<task-node name="信息服务中心账号管理员">
+		<task name="信息服务中心账号管理员">
+			<assignment class="org.springmodules.workflow.jbpm31.JbpmHandlerProxy">
+				<targetBean>actCommAssignmentHandler</targetBean>
+				<factoryKey>jbpmConfiguration</factoryKey>
+			</assignment>
+		</task>		
+		<transition to="归档" name="归档"></transition>
+		<transition to="驳回重提" name="驳回"></transition>
+	</task-node>
+
+	<node name="归档">
+		<event type="node-enter">
+			<action name="账号操作" 
+				class="org.springmodules.workflow.jbpm31.JbpmHandlerProxy">
+				<targetBean>actPacEffectAgentActionHandler</targetBean>
+				<factoryKey>jbpmConfiguration</factoryKey>
+			</action>			
+		</event>		
+		<action name="归档"
+			class="org.springmodules.workflow.jbpm31.JbpmHandlerProxy">
+			<targetBean>actPacPigeonholeAction</targetBean>
+			<factoryKey>jbpmConfiguration</factoryKey>
+		</action>		
+		<transition to="申请结束" name="申请结束"></transition>
+	</node>
+
+	<task-node name="驳回重提">
+		<task name="驳回重提">
+			<assignment class="org.springmodules.workflow.jbpm31.JbpmHandlerProxy">
+				<targetBean>actRejectAssignmentHandler</targetBean>
+				<factoryKey>jbpmConfiguration</factoryKey>
+			</assignment>
+		</task>	
+		<transition to="部门领导审批" name="重提提交"></transition>
+	</task-node>
+
+
+	<end-state name="申请结束">
+		<event type="node-enter">
+			<action name="结束流程"
+				class="org.springmodules.workflow.jbpm31.JbpmHandlerProxy">
+				<targetBean>endProcessAction</targetBean>
+				<factoryKey>jbpmConfiguration</factoryKey>
+			</action>
+		</event>	
+	</end-state>
+
+
+</process-definition>

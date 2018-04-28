@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="demo1" name="demo1" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <userTask id="提交申请" name="提交申请" activiti:assignee="${userId}"></userTask>
+    <userTask id="经理审批" name="经理审批" default="经理批准">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.jeff.test.AssigneeImpl"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="总经理审批" name="总经理审批" default="总经理批准">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.jeff.test.AssigneeImpl"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="提交申请"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="提交申请" targetRef="经理审批"></sequenceFlow>
+    <sequenceFlow id="经理批准" name="经理批准" sourceRef="经理审批" targetRef="总经理审批"></sequenceFlow>
+    <sequenceFlow id="总经理批准" name="总经理批准" sourceRef="总经理审批" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="总经理驳回" name="总经理驳回" sourceRef="总经理审批" targetRef="提交申请"></sequenceFlow>
+    <sequenceFlow id="经理驳回" name="经理驳回" sourceRef="经理审批" targetRef="提交申请"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_demo1">
+    <bpmndi:BPMNPlane bpmnElement="demo1" id="BPMNPlane_demo1">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="60.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="800.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="提交申请" id="BPMNShape_提交申请">
+        <omgdc:Bounds height="55.0" width="105.0" x="170.0" y="270.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="经理审批" id="BPMNShape_经理审批">
+        <omgdc:Bounds height="55.0" width="105.0" x="380.0" y="270.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="总经理审批" id="BPMNShape_总经理审批">
+        <omgdc:Bounds height="55.0" width="105.0" x="570.0" y="270.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="95.0" y="297.0"></omgdi:waypoint>
+        <omgdi:waypoint x="170.0" y="297.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="275.0" y="297.0"></omgdi:waypoint>
+        <omgdi:waypoint x="380.0" y="297.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="经理批准" id="BPMNEdge_经理批准">
+        <omgdi:waypoint x="485.0" y="297.0"></omgdi:waypoint>
+        <omgdi:waypoint x="570.0" y="297.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="48.0" x="485.0" y="297.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="总经理批准" id="BPMNEdge_总经理批准">
+        <omgdi:waypoint x="675.0" y="297.0"></omgdi:waypoint>
+        <omgdi:waypoint x="800.0" y="297.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="60.0" x="700.0" y="297.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="总经理驳回" id="BPMNEdge_总经理驳回">
+        <omgdi:waypoint x="622.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="622.0" y="221.0"></omgdi:waypoint>
+        <omgdi:waypoint x="222.0" y="221.0"></omgdi:waypoint>
+        <omgdi:waypoint x="222.0" y="270.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="60.0" x="360.0" y="201.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="经理驳回" id="BPMNEdge_经理驳回">
+        <omgdi:waypoint x="432.0" y="325.0"></omgdi:waypoint>
+        <omgdi:waypoint x="434.0" y="386.0"></omgdi:waypoint>
+        <omgdi:waypoint x="222.0" y="386.0"></omgdi:waypoint>
+        <omgdi:waypoint x="222.0" y="325.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="48.0" x="289.0" y="370.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
